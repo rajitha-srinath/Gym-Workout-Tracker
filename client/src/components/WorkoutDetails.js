@@ -1,8 +1,8 @@
-import { useWorkoutsContext } from "../hooks/userWorkoutContext";
-import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { useDispatch } from "react-redux";
 
 const WorkoutDetails = ({ workout }) => {
-  const { dispatch } = useWorkoutsContext();
+  const dispatch = useDispatch();
 
   const handleClick = async () => {
     const response = await fetch("/api/workouts/" + workout._id, {
@@ -29,8 +29,12 @@ const WorkoutDetails = ({ workout }) => {
         <strong>Number of reps: </strong>
         {workout.reps}
       </p>
-      <p>{formatDistanceToNow(new Date(workout.createdAt), {addSuffix: true})}</p>
-      <span className="material-symbols-outlined" onClick={handleClick}>Delete</span>
+      <p>
+        {formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}
+      </p>
+      <span className="material-symbols-outlined" onClick={handleClick}>
+        Delete
+      </span>
     </div>
   );
 };

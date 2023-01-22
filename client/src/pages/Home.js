@@ -1,24 +1,27 @@
 import { useEffect } from "react";
-import { useWorkoutsContext } from "../hooks/userWorkoutContext";
+import { useSelector, useDispatch } from "react-redux";
 
 // components
 import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutForm from "../components/WorkoutForm";
 
 const Home = () => {
-  const { workouts, dispatch } = useWorkoutsContext();
+  let dispatch = useDispatch();
+  const { workouts } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch("/api/workouts");
-      const json = await response.json();
-
-      if (response.ok) {
-        dispatch({
-          type: "SET_WORKOUTS",
-          payload: json,
+      await fetch("/api/workouts")
+        .then((res) => res.json())
+        .then((res) => {
+          dispatch({
+            type: "SET_WORKOUTS",
+            payload: res,
+          });
+        })
+        .catch((err) => {
+          console.log("Error occured when data fetching...", err);
         });
-      }
     };
 
     fetchWorkouts();
@@ -28,6 +31,7 @@ const Home = () => {
     <div className="home">
       <div className="workouts">
         {workouts &&
+          workouts.length !== 0 &&
           workouts.map((workout) => (
             <WorkoutDetails workout={workout} key={workout._id} />
           ))}
